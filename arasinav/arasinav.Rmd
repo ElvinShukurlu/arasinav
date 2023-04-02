@@ -1,5 +1,5 @@
 ---
-title: "Çalışmanızın Başlığı"
+title: "FIFA 2023 yılı futbolcu reytingleri analizi"
 author: 
   - Elvin Shukurov[^1]
 bibliography: ../bibliography/biblio.bib
@@ -37,28 +37,52 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FAL
 
 
 # Giriş
-Bu taslak size proje ödevinizi yazarken yardımcı olması amacıyla oluşturulmuştur. Ödevlerinizde, makalelerinizde, sunumlarınızda ve projelerinizde kullandığınız tüm bilgi kaynaklarına atıfta bulunmalısınız. Alıntı ve gönderme yapmak okuyuculara çalışmanızda kullandığınız/başvurduğunuz  kaynaklara ulaşma imkanı sağlar. **Her ne kadar kendi sözlerinizi kullanıyor olsanız da, başkalarına ait fikirleri çalışmanızda aktarıyorsanız bu fikirlerin kaynağını belgelemek zorundasınız. Aksi takdirde akademik intihal yapmış olursunuz.** Yazım konusunda @aydinonat:2007'ye başvurabilirsiniz. 
 
+Futbol genel olarak bakıldığınde en çok izlenilen sporlar arasında gelmektedir ve  ülkemizde de en çok takip edilen sporlar arasında birinci yerdedir. Tabii ki, bu kadar göz önünde olan bir sporla alakalı da bir çok araştırma, oyun, makale vs çıkarılmıştır.
+FIFA her yıl bu sporun video oyununu yapıyor ve bu oyunda oyuncuların o yıldaki gösterdikleri performanslara göre onların yeteneklerine 99 üzerinden(99 uygun gelen yetenek için maksimum, 1 ise minimum puana denk geliyor) bir puan veriyor. Bu analizde kullanılacak olan veri [FIFA](https://ratings-api.ea.com/v2/entities/fifa-23-ratings?filter=nationality%3A(48)&sort=ranking%3AASC&limit=50')'dan web kazıma yöntemi ile veride olan ülkelerin en iyi oyuncuları seçilerek çekilmiştir. Verimiz 378  gözlem ve 16 değişkenden oluşmaktadır.
+
+Veride uygun gelen oyuncunun ismi(name),doğum tarihi(birthdate),defans gücü(def),uzun vuruşları(longshots),oynadığı mevki(preferredposition1label), halihazırda oynadığı takımı, ülkesi(country),kısa pas ve uzun pas yeteneği(shortpassing and longpassing), vole yeteneği(volleys),denge seviyesi(balance),defansa katkı seviyesi(defensiveawareness), oyuncunun boyunun uzunluğu(height),bitiriciliği(finishing) ve koşu hızı(sprintspeed) yer almaktadır.
 
 ```{r include=FALSE}
 library(tidyverse)
 library(readxl)
 veri <- read_excel('../data/futbol.xlsx')
+veri1 <- veri %>% select(birthdate, def,longshots,preferredposition1label,teamname,country,shortpassing,volleys,balance,shotpower,defensiveawareness,height,longpassing,finishing,sprintspeed)
+
+veri1$name <- paste(veri$firstname, veri$surname, sep = " ")
+
+
+
+#Web kazımayı python'da bildiğim için veriyi pythonda çektim o yüzden burada bir file paylaşamıyorum. Ancak yine de genel kod şu şekilde:
+#import pandas as pd
+#import json
+#import requests
+#from bs4 import BeautifulSoup as bs
+
+#url = 'https://ratings-api.ea.com/v2/entities/fifa-23-ratings?filter=nationality%3A(48)&sort=ranking%3AASC&limit=50'
+#r = requests.get(url)
+#bes = bs(r.text, 'html.parser')
+#json_data = json.loads(r.text)
+#data_docs = json_data['docs']
+
+
+#df = pd.DataFrame.from_dict(data_docs)
+#df['country'] = "Turkey"
+
+#df.to_excel(r'C:\Users\elvinsukurov\Desktop/data/9.xlsx', index =False)
+
 ```
 
 
 
-
-Proje ödevinizde yer alan başlıkların bu metinde yer alan başlıkları kesinlikle içermesi gerekmektedir (doğal olarak ilk bölüm başlığı hariç). Burada kullanılan başlıklar haricinde farklı alt başlıklar da kullanabilirsiniz. Projenizi yazarken bu dosyayı taslak olarak kullanıp içeriğini projenize uyarlayınız.
-
 ## Çalışmanın Amacı
-Bu bölümde yaptığınız çalışmanın amacından ve öneminden birkaç paragraf ile bahsediniz.
+
+Kullanılan veri futbolun en çok yaygın olduğu ülkelerin genellikle en iyi oyuncularını kapsamaktadır. Çalışmada ülkelerin oyuncularının mevkilere göre, genel teknik göstericilere göre bir açık farkın olup olmadığı aranacaktır. Son Dünya kupasını kazanan ülkenin oyuncularının genel olarak diğer oyunculardan iyi olması t testi ile test edilecekdir. Son olarak ta oyuncunun yaşı ve boyunun diğer tekniki değişkenler arasında pozitif veya negatif korelasyon olup-olmadığı araştırılacaktır. Yaşlı oyuncuların, nispeten genç oyunculara göre belirgin olan bir özelliğinin olup-olmadığı araştırılacaktır.
+
+Genel olarak İtalyanın defansif odaklı, Arjantin ve Brezilyanın ise hücüm odaklı oynadığına göre bu özelliklerin diğer ülkelerden olan oyunculara göre fazla olacağını düşünüyorum ve bu çalışmada böyle bir tahmine dayanarak yapılan bir regresyon analizinin ne kadar güvenilir olduğu araştırılacaktır. 
 
 ## Literatür 
-Bu bölümde konu ile ilgili olarak okuduğunuz makaleleri referans vererek tartışınız. **Her makaleyi ayrı başlık altında tek tek özetlemeyiniz.** Literatür taramasında **en az dört** makaleye atıf yapılması ve bu makalelerden **en az ikisinin İngilizce** olması gerekmektedir.
 
-
-**_Taslakta bu cümleden sonra yer alan hiçbir şey silinmemelidir._**
 
 \newpage
 # Kaynakça {#references}
